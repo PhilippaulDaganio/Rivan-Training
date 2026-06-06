@@ -31,6 +31,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class CartUserSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(source='cart_id', read_only=True)
     product = ProductSerializer(read_only=True)
     product_id = serializers.IntegerField(write_only=True)
 

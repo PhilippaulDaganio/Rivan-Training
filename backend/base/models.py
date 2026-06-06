@@ -15,8 +15,9 @@ class Product(models.Model):
 
 
 class CartUser(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    cart_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, db_column='user_id_id')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, db_column='product_id_id')
     qty = models.IntegerField(default=1)
 
     def __str__(self):

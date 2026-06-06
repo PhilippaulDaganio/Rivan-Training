@@ -4,6 +4,7 @@ const Header = () => {
   const links = [
     { label: "Home", path: "/" },
     { label: "Products", path: "/products" },
+    { label: "Cart", path: "/cart" },
   ];
 
   return (

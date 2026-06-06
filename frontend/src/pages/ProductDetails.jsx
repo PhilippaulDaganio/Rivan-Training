@@ -1,23 +1,26 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import { BASE_URL } from "../api/base";
 
 const ProductDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const baseUrl = BASE_URL.replace(/\/$/, "");
   const [product, setProduct] = useState(null);
   const [status, setStatus] = useState("loading");
+  const [cartStatus, setCartStatus] = useState("idle");
+  const [cartMessage, setCartMessage] = useState("");
   const [error, setError] = useState("");
 
-  // ✅ Load product details
   useEffect(() => {
     const loadProduct = async () => {
       try {
         setStatus("loading");
         setError("");
 
-        const response = await fetch(`${BASE_URL}/products/${id}/`);
+        const response = await fetch(`${baseUrl}/products/${id}/`);
         if (!response.ok) {
           throw new Error("Product could not be loaded.");
         }
@@ -32,38 +35,67 @@ const ProductDetails = () => {
     };
 
     loadProduct();
-  }, [id]);
+  }, [baseUrl, id]);
 
-  // ✅ Add to cart handler
   const handleAddToCart = async () => {
+    const token =
+      localStorage.getItem("access_token") || localStorage.getItem("accessToken");
+
+    if (!token) {
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("refresh_token");
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      setCartStatus("error");
+      setCartMessage("Please log in before adding products to your cart.");
+      navigate("/login");
+      return;
+    }
+
     try {
-      const token = localStorage.getItem("access_token");
-      const response = await fetch(`${BASE_URL}/cart/add/`, {
+      setCartStatus("loading");
+      setCartMessage("");
+
+      const response = await fetch(`${baseUrl}/cart/add/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + token, // 👈 here
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          product_id: product.id, // ✅ backend expects product_id
+          product_id: product.id,
           qty: 1,
         }),
       });
 
+      const data = await response.json().catch(() => ({}));
+
       if (!response.ok) {
-        throw new Error("Failed to add to cart");
+        if (response.status === 401) {
+          localStorage.removeItem("access_token");
+          localStorage.removeItem("refresh_token");
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+          navigate("/login");
+          throw new Error("Your login expired. Please log in again.");
+        }
+
+        throw new Error(
+          data.detail || data.error || "Failed to add this product to your cart."
+        );
       }
 
-      const data = await response.json();
-      alert("Product added to cart!");
-      console.log(data);
+      setCartStatus("success");
+      setCartMessage("Product added to cart.");
+      navigate("/cart", {
+        state: { addedProduct: product.product_name },
+      });
     } catch (err) {
-      alert(err.message);
+      setCartStatus("error");
+      setCartMessage(err.message || "Failed to add this product to your cart.");
     }
   };
 
-  
-  // ✅ Handle loading and error states
   if (status === "loading") {
     return (
       <div className="min-h-screen bg-white text-slate-950">
@@ -109,9 +141,8 @@ const ProductDetails = () => {
 
   const imageUrl = product.image?.startsWith("http")
     ? product.image
-    : `${BASE_URL}${product.image}`;
+    : `${baseUrl}${product.image}`;
 
-  // ✅ Render product details
   return (
     <div className="min-h-screen bg-white text-slate-950">
       <Header />
@@ -146,10 +177,20 @@ const ProductDetails = () => {
           <button
             type="button"
             onClick={handleAddToCart}
-            className="mt-8 inline-flex w-full items-center justify-center rounded-lg bg-[#061947] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#0b255f] sm:w-auto"
+            disabled={cartStatus === "loading" || product.countInStock < 1}
+            className="mt-8 inline-flex w-full items-center justify-center rounded-lg bg-[#061947] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#0b255f] disabled:cursor-not-allowed disabled:bg-slate-400 sm:w-auto"
           >
-            Add to cart
+            {cartStatus === "loading" ? "Adding..." : "Add to cart"}
           </button>
+          {cartMessage && (
+            <p
+              className={`mt-4 text-sm font-medium ${
+                cartStatus === "success" ? "text-emerald-700" : "text-red-600"
+              }`}
+            >
+              {cartMessage}
+            </p>
+          )}
         </section>
       </main>
       <Footer />

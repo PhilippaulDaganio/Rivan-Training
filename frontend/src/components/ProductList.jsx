@@ -18,9 +18,7 @@ const ProductList = () => {
 
   useEffect(() => {
     ProductData();
-  });
-
-  const visibleProducts = 3? products.slice(0, 3) : products;
+  }, []);
 
   return (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -42,7 +40,7 @@ const ProductList = () => {
                 {product.product_name}
               </h3>
               <p className="shrink-0 font-semibold text-[#061947]">
-                {product.product_price}
+                PHP {product.product_price}
               </p>
             </div>
             <p className="mt-3 line-clamp-2 text-sm leading-6 text-slate-600">

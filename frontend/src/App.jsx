@@ -1,5 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
+import CheckoutResult from "./pages/CheckoutResult";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import ProductDetails from "./pages/ProductDetails";
@@ -21,6 +23,30 @@ function App() {
           element={
             <PrivateRoute>
               <Cart />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/checkout"
+          element={
+            <PrivateRoute>
+              <Checkout />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/checkout/success"
+          element={
+            <PrivateRoute>
+              <CheckoutResult result="success" />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/checkout/failed"
+          element={
+            <PrivateRoute>
+              <CheckoutResult result="failed" />
             </PrivateRoute>
           }
         />

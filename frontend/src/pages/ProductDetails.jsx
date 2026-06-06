@@ -166,7 +166,7 @@ const ProductDetails = () => {
             {product.product_name}
           </h1>
           <p className="mt-4 text-2xl font-bold text-[#061947]">
-            ${product.product_price}
+            PHP {product.product_price}
           </p>
           <p className="mt-6 text-base leading-8 text-slate-600">
             {product.description}

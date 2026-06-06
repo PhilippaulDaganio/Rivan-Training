@@ -12,6 +12,9 @@ urlpatterns = [
     path('cart/add/', views.add_to_cart, name='add-to-cart'),
     path('cart/update/<int:pk>/', views.update_cart_item, name='update-cart-item'),
     path('cart/remove/<int:pk>/', views.remove_from_cart, name='remove-from-cart'),
+    path('checkout/', views.create_checkout, name='create-checkout'),
+    path('checkout/status/<str:external_id>/', views.checkout_status, name='checkout-status'),
+    path('checkout/xendit/webhook/', views.xendit_checkout_webhook, name='xendit-checkout-webhook'),
 
     path('register/', views.register_user, name='register-user'),
     path('user-profile/', views.get_user_profile, name='user-profile'),

@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -67,10 +68,17 @@ MIDDLEWARE = [
 ]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+    "http://127.0.0.1:5173",
     "https://philipshop.vercel.app",
     "https://philipshop-git-main-philip-s-projects22.vercel.app",
     "https://philipshop-pj4zc8hk6-philip-s-projects22.vercel.app",
 ]
+
+XENDIT_SECRET_KEY = "xnd_development_o3NdHV6lO9fDIBv8oW3QiMJwT6y16panD2S8FttSbRQGIY2tPCl5yQtsd0UD3A"
+XENDIT_WEBHOOK_TOKEN ="7addSZrHHFhZw3ptz8qviCFqVTjZJORjlduHq9wnXs1TPIKP"
+XENDIT_CURRENCY = os.environ.get('XENDIT_CURRENCY', 'PHP')
+FRONTEND_BASE_URL="https://philipshop.vercel.app"
+FRONTEND_BASE_URL = os.environ.get('FRONTEND_BASE_URL', 'https://philipshop-git-main-philip-s-projects22.vercel.app')
 ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [

@@ -77,8 +77,7 @@ CORS_ALLOWED_ORIGINS = [
 XENDIT_SECRET_KEY = "xnd_development_o3NdHV6lO9fDIBv8oW3QiMJwT6y16panD2S8FttSbRQGIY2tPCl5yQtsd0UD3A"
 XENDIT_WEBHOOK_TOKEN ="7addSZrHHFhZw3ptz8qviCFqVTjZJORjlduHq9wnXs1TPIKP"
 XENDIT_CURRENCY = os.environ.get('XENDIT_CURRENCY', 'PHP')
-FRONTEND_BASE_URL="https://philipshop.vercel.app"
-FRONTEND_BASE_URL = os.environ.get('FRONTEND_BASE_URL', 'https://philipshop-git-main-philip-s-projects22.vercel.app')
+FRONTEND_BASE_URL = os.environ.get('FRONTEND_BASE_URL', "philipshop-git-main-philip-s-projects22.vercel.app")
 ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [
